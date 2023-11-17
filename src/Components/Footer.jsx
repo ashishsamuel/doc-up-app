@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import './Footer.css'
 
 function Footer() {
   return (
-    <div className='d-flex justify-content-center align-items-center flex-column bg-primary text-light mt-5' style={{width:'100%',height:'350px'}}>
+    <div className='d-flex justify-content-center align-items-center flex-column bg-primary text-light mt-5 flex-wrap' style={{width:'100%',height:'350px'}}>
       <div className='footer-content d-flex justify-content-evenly w-100 flex-wrap'>
-        <div className='website d-flex flex-column'>
+        <div className='website d-flex flex-column margin-style'>
         <h4>Doc Up<span className='ms-2'><i class="fa-solid fa-file" style={{color:'white'}}></i></span></h4>
 <h6>
     Designed and built with all the love in the world by the Doc Up team with the help of our contributors.</h6>

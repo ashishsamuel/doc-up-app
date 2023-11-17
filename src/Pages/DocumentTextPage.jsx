@@ -6,13 +6,15 @@ import { db } from '../Config/firebase-config';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import './DocumentTextPage.css'
 
 function DocumentTextPage() {
     const [documentNote,setDocumentNote] = useState("")
     const [specificDocument,setSpecificDocument] = useState({})
     const {id} = useParams();
     const documentsCollectionRef = doc(db,"document",id)
+    const navigate = useNavigate()
 
     useEffect(()=>{
       getDocumentDetails()
@@ -34,50 +36,58 @@ function DocumentTextPage() {
   }
 
   var toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-  ['blockquote', 'code-block'],
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block'],
+  
+    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+    [{ 'direction': 'rtl' }],                         // text direction
+  
+    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+  
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    [{ 'font': [] }],
+    [{ 'align': [] }],
+  
+    ['clean'] 
+]
 
-  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-
-  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-  [{ 'font': [] }],
-  [{ 'align': [] }],
-
-  ['clean']]
   const module = {
     toolbar: toolbarOptions
   } 
 
   const saveDocumentText = async()=>{
     console.log("document note in save",documentNote);
-    // if(documentNote!=""){
+    if(documentNote!=""){
         try{
           await updateDoc(documentsCollectionRef,{note:documentNote.replace(/<\/?[^>]+(>|$)/g,"")})
+          toast.success("Document updated sucessfully")
+          setTimeout(() => {
+            navigate('/')
+          }, 3000);
         }
         catch(err){
             console.log(err);
         }
-    // }
-    // else{
-    //     toast.warning("Please provide any text")
-    // }
-  }
-
-  const updateDocumentText = ()=>{
-    // const {value} = e.target
-    console.log("inside on change function");
-    // console.log(value);
-    setDocumentNote("hi how are you")
+    }
+    else{
+        toast.warning("Please provide any text")
+    }
   }
 
   return (
-    <div className='text-center container mt-4'>
-        <ReactQuill modules={module} theme='snow' value={documentNote} onChange={setDocumentNote}/>
-        <button className='btn btn-primary mt-3' onClick={saveDocumentText}>Save</button>
-      </div>
+    <>
+      <div className='text-center container mt-4' style={{height:'34vh'}}>
+          <ReactQuill modules={module} theme='snow' value={documentNote} onChange={setDocumentNote} className='height-style'/>
+        </div>
+        <div className='d-flex justify-content-center align-items-center'>
+          <button className='btn btn-primary mt-3' onClick={saveDocumentText}>Save</button>
+        </div>
+        <ToastContainer position='top-right' theme='colored' autoClose='2000'/>
+    </>
   )
 }
 

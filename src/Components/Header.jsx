@@ -7,7 +7,7 @@ function Header() {
   return (
     <Navbar expand="lg" className="bg-primary">
       <Container>
-        <Navbar.Brand><Link style={{textDecoration:'none'}} className='text-light ms-3' to={'/'}>Doc Up
+        <Navbar.Brand><Link style={{textDecoration:'none'}} className='text-light ms-3 fw-bold' to={'/'}>Doc Up
         <span className='ms-2'><i class="fa-solid fa-file" style={{color:'white'}}></i></span></Link></Navbar.Brand>
       </Container>
     </Navbar>

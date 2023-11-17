@@ -10,6 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
+import './UserMainPage.css'
 
 function UserMainPage() {
     const [documentList,setDocumentList] = useState([])
@@ -32,7 +33,7 @@ function UserMainPage() {
                 userId:auth?.currentUser?.uid
             })
             getDocumentsList()
-
+            toast.success("Document has sucessfully created")
         }
         catch(err){
             console.log(err);
@@ -40,7 +41,7 @@ function UserMainPage() {
         handleClose()
     }
     else{
-        toast.warning("Please provide the title")
+        toast.warning("Please Provide the Title")
     }
     }
 
@@ -60,10 +61,15 @@ function UserMainPage() {
     }
 
     const deleteDocument = async(id)=>{
-      console.log(id);
+      try{
       const movieDoc = doc(db,"document",id)
       await deleteDoc(movieDoc)
       getDocumentsList()
+      toast.success("Document has successfully deleted")
+      }
+      catch(err){
+        console.log(err);
+      }
     }
 
   return (
@@ -74,19 +80,20 @@ function UserMainPage() {
             
                 <div className='mt-4'>
                   
-                      <Card style={{height:'200px',width:'18rem'}} className='bg-light'>
+                      <Card style={{height:'220px',width:'18rem'}} className='bg-light'>
                 <Card.Body>
-                <div className='d-flex justify-content-between align-items-center'>
-                  <Link to={`/updatedocument/${doc?.id}`} style={{textDecoration:'none',color:'black'}}>
+                <div className='d-flex justify-content-end align-items-center'>
+                  <Link className='text-success' to={`/updatedocument/${doc?.id}`} style={{textDecoration:'none',color:'black'}}>
                   <i class="fa-solid fa-file-pen fa-2x"></i>
                   </Link>
-                  <div className='' style={{cursor:'pointer',height:'28px'}} onClick={()=>deleteDocument(doc.id)}><i class="fa-solid fa-trash fa-2x"></i></div>
                 </div>
 
-                  <Card.Title className='mt-3'>{doc?.title}</Card.Title>
+                  <Card.Title className='mt-3 fw-bold '>{doc?.title}</Card.Title>
                   <Card.Text>
-                    {doc?.note}
+                    {doc?.note.slice(0,60)}
                   </Card.Text>
+                  <div className='d-flex justify-content-end text-danger' style={{cursor:'pointer',marginTop:doc?.note!=""?'0px':'65px',marginRight:'8px'}} onClick={()=>deleteDocument(doc.id)}><i class="fa-solid fa-trash fa-2x"></i></div>
+
                 </Card.Body>
               </Card>
                   
@@ -96,33 +103,33 @@ function UserMainPage() {
             </div>
 
         <div className='my-4 d-flex justify-content-center align-items-center'>
-          <button className='btn btn-primary' onClick={handleShow}>Add Document</button>
+          <button className='btn btn-primary' onClick={handleShow}>Add Document<span className='ms-3'><i class="fa-solid fa-plus"></i></span></button>
         </div>
        
 
-        <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Document</Modal.Title>
+        <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton className='bg-secondary'>
+          <Modal.Title className='fw-bold'>Add Document</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <Form>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-          <Form.Label>Title</Form.Label>
-            <Form.Control type="text" placeholder="Enter the title of the document.." onChange={(e)=>setDocumentTitle(e.target.value)}/>
+          <Form.Label className='fw-bold'>Title</Form.Label>
+            <Form.Control type="text" placeholder="Enter the Title of the document..." onChange={(e)=>setDocumentTitle(e.target.value)}/>
           </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button variant="primary" onClick={handleClose}>
+            Cancel
           </Button>
-          <Button variant="primary" onClick={createDocument}>
+          <Button variant="success" onClick={createDocument}>
             Save
           </Button>
         </Modal.Footer>
-        <ToastContainer position='top-center' theme='colored' autoClose='2000'/>
       </Modal>
      </div>
+     <ToastContainer position='top-right' theme='colored' autoClose='2000'/>
      </>
   )
 }
