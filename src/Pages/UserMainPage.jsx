@@ -29,8 +29,7 @@ function UserMainPage() {
         try{
             await addDoc(documentsCollectionRef,{
                 title:documentTitle,
-                note:"",
-                userId:auth?.currentUser?.uid
+                note:""
             })
             getDocumentsList()
             toast.success("Document has sucessfully created")
