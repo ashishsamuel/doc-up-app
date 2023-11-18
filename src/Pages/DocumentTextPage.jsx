@@ -11,7 +11,8 @@ import './DocumentTextPage.css'
 
 function DocumentTextPage() {
     const [documentNote,setDocumentNote] = useState("")
-    const [specificDocument,setSpecificDocument] = useState({})
+    const [documentTitle,setDocumentTitle] = useState("")
+    // const [specificDocument,setSpecificDocument] = useState({})
     const {id} = useParams();
     const documentsCollectionRef = doc(db,"document",id)
     const navigate = useNavigate()
@@ -25,9 +26,10 @@ function DocumentTextPage() {
           const docNeeded = await getDoc(documentsCollectionRef)
           console.log(docNeeded.data());
           const data = docNeeded.data()
-          setSpecificDocument(data)
+          // setSpecificDocument(data)
+          setDocumentTitle(data.title)
           setDocumentNote(data.note.replace(/<\/?[^>]+(>|$)/g,""))
-          console.log(specificDocument);
+          // console.log(specificDocument);
   
       }catch(err){
           console.log(err);
@@ -80,13 +82,16 @@ function DocumentTextPage() {
 
   return (
     <>
-      <div className='text-center container mt-4' style={{height:'34vh'}}>
-          <ReactQuill modules={module} theme='snow' value={documentNote} onChange={setDocumentNote} className='height-style'/>
+        <div className='container'>
+          <h5 className='fw-bold mt-3 ms-2'>Title : <span className='text-info'>{documentTitle}</span></h5>
+        <div className='text-center container mt-4' style={{height:'34vh'}}>
+            <ReactQuill modules={module} theme='snow' value={documentNote} onChange={setDocumentNote} className='height-style'/>
+          </div>
+          <div className='d-flex justify-content-center align-items-center'>
+            <button className='btn btn-primary mt-3' onClick={saveDocumentText}>Save</button>
+          </div>
+          <ToastContainer position='top-right' theme='colored' autoClose='2000'/>
         </div>
-        <div className='d-flex justify-content-center align-items-center'>
-          <button className='btn btn-primary mt-3' onClick={saveDocumentText}>Save</button>
-        </div>
-        <ToastContainer position='top-right' theme='colored' autoClose='2000'/>
     </>
   )
 }
